@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiztoonz Module Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">WIZTOONZ</div>
+                <div class="subtitle">Module Builder</div>
+                <div class="search-container">
+                    <input type="text" id="module-search" placeholder="Search modules...">
+                </div>
+            </div>
+            
+            <nav class="module-nav">
+                <div class="nav-section-title">Navigation</div>
+                <ul class="dashboard-nav">
+                    <li onclick="selectModule(null)" id="dashboard-link" class="active">
+                        <span>📊 Curriculum Dashboard</span>
+                    </li>
+                </ul>
+                <div class="nav-section-title">Modules</div>
+                <ul id="module-list">
+                    <!-- Modules will be injected here -->
+                </ul>
+                <button class="btn btn-outline" id="add-module-btn" style="width: 100%; margin-top: 16px; border-style: dashed; background: transparent; color: var(--sidebar-text); border-color: rgba(255,255,255,0.1);">+ Add New Module</button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar">MR</div>
+                    <div class="user-info">
+                        <span class="name">Prof. Mahesh Ravi</span>
+                        <span class="role">Academic Lead</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            <header class="content-header">
+                <h1 id="selected-module-title">Select a Module</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="window.print()">Export Full Curriculum</button>
+                    <button class="btn btn-primary" id="edit-btn">Edit Content</button>
+                </div>
+            </header>
+            
+            <section class="module-details" id="module-details">
+                <div class="dashboard-container">
+                    <div class="dashboard-header">
+                        <div class="welcome-icon">🎓</div>
+                        <h1>Curriculum Builder</h1>
+                        <p>Drag modules from the left panel and drop them here to create a custom curriculum combination.</p>
+                    </div>
+                    
+                    <div class="drop-zone" id="drop-zone">
+                        <div class="drop-placeholder">
+                            <div class="plus-icon">+</div>
+                            <p>Drop modules here to start building</p>
+                        </div>
+                        <ul id="builder-list" class="builder-list"></ul>
+                    </div>
+
+                    <div class="dashboard-actions" id="dashboard-actions" style="display: none;">
+                        <button class="btn btn-primary btn-lg" onclick="exportCombinedCurriculum()">
+                            Export Combined Curriculum (PDF)
+                        </button>
+                        <button class="btn btn-outline" onclick="clearBuilder()">Clear All</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

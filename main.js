@@ -7,6 +7,7 @@ const modules = [
                 name: 'Book Cover Design',
                 initialPhase: 'Show Moodboard, Set Benchmark',
                 tools: ['Figma', 'ChatGPT', 'Gemini', 'Pinterest', 'Cosmos', 'Behance'],
+                teachingGoal: 'To teach design foundation, to give exposure to good design, to understand finer controls of typography, shapes, colors and imagery in design. To introduce various design and ai tools.',
                 teachingContent: ['Design Fundamentals', 'Typography', 'Shapes', 'Colors and Imagery', 'Types of Design Domains'],
                 methodology: 'Share-Screen demos for tasks and activities. Teach Concepts using Crawlmat, Note down key points and connections as you teach in the mat. Encourage student interaction.',
                 brief: `<h3>Project Title: Book Cover Design: Front, Back, and Spine</h3>
@@ -30,6 +31,7 @@ const modules = [
                 name: 'Poster Series',
                 initialPhase: 'Show Moodboard, Set Benchmark',
                 tools: ['Adobe Photoshop', 'Adobe Generative AI tools', 'ChatGPT', 'Gemini', 'Kittl'],
+                teachingGoal: 'To teach layout fundamentals, making them comfortable to swiss graphic design style, introduce to different graphic design style, to introduce various raster design tools',
                 teachingContent: ['Layout Principles', 'Swiss International Design Style', 'Other Graphic Design Styles'],
                 methodology: 'Share-Screen demos for tasks and activities. Teach using Crawlmat, Note down key points and connections as you teach in the mat. Encourage student interaction.',
                 brief: `<h3>Project Title: Fictional Movie Posters: A Series of 5 Different Graphic Design Styles</h3>
@@ -52,6 +54,7 @@ const modules = [
                 name: 'Logo Design',
                 initialPhase: 'Show Moodboard, Set Benchmark',
                 tools: ['Adobe Illustrator', 'ChatGPT', 'Gemini', 'Adobe Firefly'],
+                teachingGoal: 'To teach about branding basics, working with vector, formstorming, and design process flow.',
                 teachingContent: ['Logo Design Principles', 'Brand Identity', 'Visual Symbolism'],
                 methodology: 'Share-Screen demos for tasks and activities. Teach using Crawlmat, Note down key points and connections as you teach in the mat. Encourage student interaction.',
                 brief: `<h3>Project Title: Coffee Shop Logo Design & Brand Style Guide</h3>
@@ -434,6 +437,7 @@ const moduleList = document.getElementById('module-list');
 const moduleDetails = document.getElementById('module-details');
 const moduleTitle = document.getElementById('selected-module-title');
 const editBtn = document.getElementById('edit-btn');
+const exportBtn = document.getElementById('export-btn');
 
 let currentModuleId = null;
 let isEditing = false;
@@ -444,8 +448,8 @@ function init() {
     renderModuleList();
     initBuilder();
     
-    // Select no module by default to show dashboard
-    selectModule(null);
+    // Select Home by default
+    selectModule('home');
 
     editBtn.addEventListener('click', toggleEditMode);
     
@@ -555,6 +559,7 @@ function exportCombinedCurriculum() {
                             <h3 style="color: #ec4899; margin-bottom: 20px;">Assessment ${i+1}: ${a.name}</h3>
                             <p><strong>Initial Phase:</strong> ${a.initialPhase}</p>
                             <p><strong>Tools:</strong> ${a.tools.join(', ')}</p>
+                            <p><strong>Teaching Goal:</strong> ${a.teachingGoal || 'Not specified'}</p>
                             <p><strong>Methodology:</strong> ${a.methodology}</p>
                             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
                                 ${a.brief || 'No brief available.'}
@@ -595,6 +600,7 @@ function addNewModule() {
                 name: 'New Assessment',
                 initialPhase: 'Pending...',
                 tools: [],
+                teachingGoal: '',
                 teachingContent: [],
                 methodology: 'Pending...',
                 brief: ''
@@ -651,7 +657,7 @@ function selectModule(moduleId) {
     
     currentModuleId = moduleId;
     isEditing = false;
-    editBtn.textContent = 'Edit Content';
+    editBtn.textContent = 'Edit';
     editBtn.classList.remove('editing-mode-btn');
     
     // Update active state in sidebar
@@ -659,7 +665,31 @@ function selectModule(moduleId) {
         li.classList.remove('active');
     });
     
-    if (moduleId) {
+    // Map for static navigation links
+    const navLinks = {
+        'home': 'home-link',
+        'builder': 'builder-link'
+    };
+
+    if (moduleId === 'home') {
+        const homeLink = document.getElementById('home-link');
+        if (homeLink) homeLink.classList.add('active');
+        moduleTitle.textContent = ''; // Removed 'Welcome'
+        renderHome();
+        editBtn.style.display = 'none';
+        exportBtn.style.display = 'none';
+        console.log('Navigation: Switched to Home');
+    } else if (moduleId === 'builder') {
+        const builderLink = document.getElementById('builder-link');
+        if (builderLink) builderLink.classList.add('active');
+        moduleTitle.textContent = 'Curriculum Builder';
+        renderDashboard();
+        editBtn.style.display = 'none';
+        exportBtn.style.display = 'none';
+        console.log('Navigation: Switched to Curriculum Builder');
+    } else if (!moduleId) {
+        selectModule('home');
+    } else {
         const li = document.querySelector(`#module-list li[data-id="${moduleId}"]`);
         if (li) li.classList.add('active');
         
@@ -668,13 +698,83 @@ function selectModule(moduleId) {
             moduleTitle.textContent = module.title;
             renderModuleContent(module);
             editBtn.style.display = 'block';
+            exportBtn.style.display = 'block';
+            console.log('Navigation: Switched to Module:', module.title);
         }
-    } else {
-        document.getElementById('dashboard-link').classList.add('active');
-        moduleTitle.textContent = 'Curriculum Dashboard';
-        renderDashboard();
-        editBtn.style.display = 'none';
     }
+
+    // Show/Hide Chat with Notebook & Teaching Philosophy buttons
+    const chatBtn = document.getElementById('chat-notebook-btn');
+    const teachingBtn = document.getElementById('teaching-philosophy-btn');
+    
+    // Notebook links for specific modules
+    const notebookLinks = {
+        'design-fundamentals': 'https://notebooklm.google.com/notebook/d4d92174-bf6e-48d7-91f1-c619be574f01/preview',
+        'ui-ux-design': 'https://notebooklm.google.com/notebook/1b01d564-5f78-4cb1-8982-3806f97fc481/preview',
+        'multimedia-design': 'https://notebooklm.google.com/notebook/2bd513fd-02b9-4057-89d8-fab2886af354/preview',
+        'photography': 'https://notebooklm.google.com/notebook/31fc5eea-a01c-450c-9733-68ae9107afba/preview'
+    };
+
+    // Teaching Philosophy links for specific modules
+    const teachingPhilosophyLinks = {
+        'design-fundamentals': 'https://drive.google.com/file/d/1wLVdyzLSTtxPFIfKRAQljEQ-lOMiMfAx/view?usp=sharing',
+        'ui-ux-design': 'https://drive.google.com/file/d/1OQJEkx1sQbEXlf3zszToNxUwB4rDOMrc/view?usp=sharing',
+        'multimedia-design': 'https://drive.google.com/file/d/1ztOB6fHJ5QQfcsKKzAXHgmh53un2dL2k/view?usp=drive_link',
+        'photography': 'https://drive.google.com/file/d/158NxDSpX-7FXVsWnGABw7ICZRlTDhWM4/view?usp=drive_link'
+    };
+
+    if (moduleId && notebookLinks[moduleId]) {
+        chatBtn.style.display = 'flex';
+        chatBtn.href = notebookLinks[moduleId];
+    } else {
+        chatBtn.style.display = 'none';
+    }
+
+    if (moduleId && teachingPhilosophyLinks[moduleId]) {
+        teachingBtn.style.display = 'flex';
+        teachingBtn.href = teachingPhilosophyLinks[moduleId];
+    } else {
+        teachingBtn.style.display = 'none';
+    }
+
+    // Benchmark button logic
+    const benchmarkBtn = document.getElementById('benchmark-btn');
+    const benchmarkLinks = {
+        'design-fundamentals': 'https://www.figma.com/design/48aOBiYZsVFFUL46z8jSX9/all-8-module?node-id=1-2',
+        'photography': 'https://www.figma.com/design/48aOBiYZsVFFUL46z8jSX9/all-8-module?node-id=0-1',
+        'multimedia-design': 'https://www.figma.com/design/48aOBiYZsVFFUL46z8jSX9/all-8-module?node-id=1-3',
+        'animation-motion-graphics': 'https://www.figma.com/design/48aOBiYZsVFFUL46z8jSX9/all-8-module?node-id=1-5',
+        'vfx': 'https://youtube.com/playlist?list=PLazb53VqWHAex9tYWPwOkbECBgBeArlw1&si=Oo0blCkrbhK8bIlf',
+        '3d-production': 'https://www.figma.com/design/48aOBiYZsVFFUL46z8jSX9/all-8-module?node-id=1-6',
+        'video-editing': 'https://www.youtube.com/playlist?list=PL5du-0B-GNyf8nDhv_z4IUNv9u1eA8WPg'
+    };
+
+    if (moduleId && benchmarkLinks[moduleId]) {
+        benchmarkBtn.style.display = 'inline-block';
+        benchmarkBtn.href = benchmarkLinks[moduleId];
+    } else {
+        benchmarkBtn.style.display = 'none';
+    }
+}
+
+function renderHome() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+    moduleDetails.innerHTML = `
+        <div class="home-container animate-in">
+            <div class="home-header-section">
+                <div class="datetime-badge">${dateStr} • ${timeStr}</div>
+                <h1>Welcome Faculty</h1>
+            </div>
+            
+            <div class="home-note">
+                <p>You are in the Faculty Guide of Wiztoonz Academy. You can click on the modules on the left to see the curriculum, benchmarks, assessments, teaching assistant and also a chatbot to learn more about each module.</p>
+                <p>The curriculum builder helps you to create a combination of various modules and download a combined curriculum for offline use. You can edit each item inside the Module whenever you want to upgrade the modules.</p>
+            </div>
+        </div>
+    `;
 }
 
 function renderDashboard() {
@@ -729,6 +829,12 @@ function renderModuleContent(module) {
                     </div>
                 </div>
                 <div class="info-box full-width">
+                    <span class="label">Teaching Goal</span>
+                    <div class="methodology-text" style="background: var(--primary-light); border-color: var(--accent);" ${isEditing ? 'contenteditable="true"' : ''} data-field="teachingGoal">
+                        ${assessment.teachingGoal || 'Not specified'}
+                    </div>
+                </div>
+                <div class="info-box full-width">
                     <span class="label">Teaching Content ${isEditing ? '(Comma separated)' : ''}</span>
                     <div class="tag-container" ${isEditing ? 'contenteditable="true" data-field="teachingContent"' : ''}>
                         ${isEditing ? (assessment.teachingContent || []).join(', ') : (assessment.teachingContent || []).map(content => `<span class="tag">${content}</span>`).join('')}
@@ -770,6 +876,7 @@ function addAssessment() {
         name: 'New Assessment',
         initialPhase: 'Pending...',
         tools: [],
+        teachingGoal: '',
         teachingContent: [],
         methodology: 'Pending...',
         brief: ''
@@ -833,6 +940,7 @@ function saveChanges() {
         assessment.name = titleEl.textContent.replace(/Assessment \d+: /, '').trim();
         
         assessment.initialPhase = card.querySelector('[data-field="initialPhase"]').textContent.trim();
+        assessment.teachingGoal = card.querySelector('[data-field="teachingGoal"]').textContent.trim();
         assessment.methodology = card.querySelector('[data-field="methodology"]').textContent.trim();
         
         assessment.tools = card.querySelector('[data-field="tools"]').textContent.split(',').map(t => t.trim()).filter(t => t);
@@ -842,7 +950,7 @@ function saveChanges() {
 
     saveToLocalStorage();
     isEditing = false;
-    editBtn.textContent = 'Edit Content';
+    editBtn.textContent = 'Edit';
     editBtn.classList.remove('editing-mode-btn');
     renderModuleContent(module);
 }
@@ -854,8 +962,22 @@ function saveToLocalStorage() {
 function loadFromLocalStorage() {
     const saved = localStorage.getItem('wiztoonz_modules');
     if (saved) {
-        // Clear original array and push new items to keep the reference
         const savedData = JSON.parse(saved);
+        
+        // Merge new fields (like teachingGoal) from default modules into saved data
+        savedData.forEach(savedModule => {
+            const defaultModule = modules.find(m => m.id === savedModule.id);
+            if (defaultModule) {
+                savedModule.assessments.forEach((savedAssessment, idx) => {
+                    const defaultAssessment = defaultModule.assessments[idx];
+                    // If teachingGoal exists in default but not in saved, add it
+                    if (defaultAssessment && defaultAssessment.teachingGoal && !savedAssessment.teachingGoal) {
+                        savedAssessment.teachingGoal = defaultAssessment.teachingGoal;
+                    }
+                });
+            }
+        });
+
         modules.length = 0;
         modules.push(...savedData);
     }

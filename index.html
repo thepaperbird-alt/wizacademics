@@ -7,15 +7,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1.0.4">
 </head>
 <body>
     <div class="app-container">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="logo">WIZTOONZ</div>
-                <div class="subtitle">Module Builder</div>
+                <div class="logo">Wiztoonz Academics</div>
+                <div class="sidebar-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 17l10-10M17 17V7H7"/>
+                    </svg>
+                </div>
                 <div class="search-container">
                     <input type="text" id="module-search" placeholder="Search modules...">
                 </div>
@@ -24,8 +28,11 @@
             <nav class="module-nav">
                 <div class="nav-section-title">Navigation</div>
                 <ul class="dashboard-nav">
-                    <li onclick="selectModule(null)" id="dashboard-link" class="active">
-                        <span>📊 Curriculum Dashboard</span>
+                    <li onclick="selectModule('home')" id="home-link" class="active">
+                        <span>Home</span>
+                    </li>
+                    <li onclick="selectModule('builder')" id="builder-link">
+                        <span>Curriculum Builder</span>
                     </li>
                 </ul>
                 <div class="nav-section-title">Modules</div>
@@ -37,10 +44,8 @@
 
             <div class="sidebar-footer">
                 <div class="user-profile">
-                    <div class="avatar">MR</div>
                     <div class="user-info">
-                        <span class="name">Prof. Mahesh Ravi</span>
-                        <span class="role">Academic Lead</span>
+                        <span class="name">Mahesh Ravi, CAO</span>
                     </div>
                 </div>
             </div>
@@ -51,8 +56,9 @@
             <header class="content-header">
                 <h1 id="selected-module-title">Select a Module</h1>
                 <div class="header-actions">
-                    <button class="btn btn-outline" onclick="window.print()">Export Full Curriculum</button>
-                    <button class="btn btn-primary" id="edit-btn">Edit Content</button>
+                    <a id="benchmark-btn" href="#" target="_blank" class="btn btn-outline" style="display: none;">Benchmarks</a>
+                    <button class="btn btn-outline btn-export" id="export-btn" style="display: none;" onclick="window.print()">Export</button>
+                    <button class="btn btn-primary" id="edit-btn">Edit</button>
                 </div>
             </header>
             
@@ -83,6 +89,14 @@
         </main>
     </div>
 
-    <script src="main.js"></script>
+    <a id="teaching-philosophy-btn" href="https://drive.google.com/file/d/1OQJEkx1sQbEXlf3zszToNxUwB4rDOMrc/view?usp=sharing" target="_blank" class="teaching-philosophy-btn floating-action-btn">
+        <span>Teaching Philosophy</span>
+    </a>
+
+    <a id="chat-notebook-btn" href="https://notebooklm.google.com/notebook/1b01d564-5f78-4cb1-8982-3806f97fc481/preview" target="_blank" class="chat-notebook-btn floating-action-btn">
+        <span>Chat with Notebook</span>
+    </a>
+
+    <script src="main.js?v=1.0.4"></script>
 </body>
 </html>

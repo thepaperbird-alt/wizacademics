@@ -764,9 +764,13 @@ function renderHome() {
 
     moduleDetails.innerHTML = `
         <div class="home-container animate-in">
+            <div class="character-banner">
+                <img src="https://i.ibb.co/tPcjrqR0/characters.jpg" alt="Faculty Characters">
+            </div>
+            <div class="home-divider"></div>
             <div class="home-header-section">
                 <div class="datetime-badge">${dateStr} • ${timeStr}</div>
-                <h1>Welcome Faculty</h1>
+                <h1 class="welcome-title">WELCOME FACULTY</h1>
             </div>
             
             <div class="home-note">
